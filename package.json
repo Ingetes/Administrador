@@ -1,1 +1,7 @@
-package
+{
+  "scripts": {
+    "build": "vite build",
+    "preview": "vite preview",
+    "dev": "vite"
+  }
+}
