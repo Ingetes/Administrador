@@ -155,11 +155,15 @@ function LoginCard() {
           </div>
 
             <button
-              type="button"
-              onClick={() => { window.location.hash = '#ingetes_admin'; }}
-              className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-semibold py-3"
+              type="submit"
+              disabled={loading}
+              className={`w-full rounded-xl text-white text-lg font-semibold py-3 ${
+                loading
+                  ? "bg-emerald-400 cursor-not-allowed"
+                  : "bg-emerald-600 hover:bg-emerald-700"
+              }`}
             >
-              Ingresar
+              {loading ? "Ingresando..." : "Ingresar"}
             </button>
           <p className="text-xs text-center text-gray-500">
             Acceso restringido al <strong>SUPER_ADMIN</strong>.
