@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, createContext, useContext } from "react";
 
-const logoIngetes = "https://ingetes.github.io/Portal-de-clientes/ingecap.jpg";
+const logoIngetes = "https://ingetes.github.io/Portal-de-clientes/ingetes.jpg";
 
 /** ========== Mock de usuarios (SOLO DEMO) ========== */
 const USERS = [
