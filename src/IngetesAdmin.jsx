@@ -236,8 +236,15 @@ export default function AdminAccessPortal() {
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
 
-  return (
-    <AuthProvider>
+return (
+  <AuthProvider>
+    {window.location.hash === "#portal_admin" ? (
+      // Cuando ya está dentro del panel, mostramos el Portaladmin a pantalla completa
+      <div className="min-h-screen w-full">
+        <AuthBody />
+      </div>
+    ) : (
+      // Vista de login con el panel verde (solo antes de ingresar)
       <div className="min-h-screen w-full bg-gradient-to-br from-white to-emerald-50 p-6">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Branding */}
@@ -264,8 +271,9 @@ export default function AdminAccessPortal() {
           </div>
         </div>
       </div>
-    </AuthProvider>
-  );
+    )}
+  </AuthProvider>
+);
 }
 
 function AuthBody() {
