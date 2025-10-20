@@ -234,16 +234,6 @@ export default function AdminAccessPortal() {
   return (
     <AuthProvider>
       <div className="min-h-screen w-full bg-gradient-to-br from-white to-emerald-50 p-6">
-        {/* Volver arriba a la derecha */}
-        <div className="max-w-6xl mx-auto flex justify-end mb-4">
-          <a
-            href="#home"
-            className="inline-flex items-center rounded-xl bg-white border border-slate-300 text-slate-700 px-4 py-2 text-sm font-semibold shadow-sm hover:bg-slate-50 transition-colors"
-          >
-            ← Volver
-          </a>
-        </div>
-
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Branding */}
           <div className="hidden md:flex flex-col justify-between rounded-2xl bg-[linear-gradient(135deg,#059669,rgba(5,150,105,0.85))] text-white p-8 shadow-xl">
