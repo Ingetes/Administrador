@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState, createContext, useContext } from "react";
+import Portaladmin from "./Portaladmin.jsx";
 
 const logoIngetes = "https://ingetes.github.io/Portal-de-clientes/ingetes.jpg";
 
@@ -93,7 +94,7 @@ function LoginCard() {
     setLoading(true);
     try {
       await login(email.trim(), password);
-      window.location.hash = "#ingetes_admin";
+      window.location.hash = "#portal_admin";
     } catch (err) {
       setError(err?.message || "No se pudo iniciar sesión");
     } finally {
@@ -270,6 +271,13 @@ export default function AdminAccessPortal() {
 function AuthBody() {
   const { session } = useAuth();
   if (!session) return <LoginCard />;
+
+  // Si ya hay sesión activa, mostramos el otro componente
+  if (window.location.hash === "#portal_admin") {
+    return <Portaladmin />;
+  }
+
+  // Por defecto sigue mostrando el dashboard original
   return (
     <RoleGate>
       <AdminDashboard />
