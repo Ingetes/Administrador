@@ -1,11 +1,7 @@
-// src/main.jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
-
-// 👇 IMPORTA SIEMPRE EL CSS (si falta, se rompe el estilo)
 import "./index.css";
-
-import AdminAccessPortal from "./IngetesAdmin.jsx";
+import AdminAccessPortal from "./IngetesAdmin.jsx"; // 👈 este es tu componente exportado por defecto
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
