@@ -250,7 +250,6 @@ function AuthBody({ route }) {
   return <LoginCard />;
 }
 
-// ⬇️ componente guardián que cierra sesión si el hash NO es #portal_admin
 function RouteGuard({ route }) {
   const { session, logout } = useAuth();
 
@@ -265,17 +264,4 @@ function RouteGuard({ route }) {
   return null;
 }
 
-function RouteGuard({ route }) {
-  const { session, logout } = useAuth();
-
-  useEffect(() => {
-    if (route !== "#portal_admin" && session) {
-      // si el usuario navega fuera del portal, cerramos sesión
-      logout();
-      sessionStorage.removeItem("ingetes_admin_session");
-    }
-  }, [route, session, logout]);
-
-  return null;
-}
 
