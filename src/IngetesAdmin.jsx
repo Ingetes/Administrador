@@ -233,29 +233,20 @@ export default function IngetesAdmin() {
 /** ========== Helper: decide qué mostrar con base en sesión/hash ========== */
 function AuthBody({ route }) {
   const { session } = useAuth();
+
+  // Si no hay sesión, muestra login
   if (!session) return <LoginCard />;
 
-  // Al hacer login, el botón pone: window.location.hash = "#portal_admin"
+  // Si hay sesión y estamos en el hash correcto, muestra el portal
   if (route === "#portal_admin") {
     return <Portaladmin />; // 👉 pantalla completa
   }
 
-  // Si hay sesión pero no estás en #portal_admin, deja un dashboard placeholder
-  return (
-    <RoleGate>
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-3 mb-5">
-          <IconUser className="w-6 h-6 text-emerald-600" />
-          <h2 className="text-xl font-semibold text-emerald-700">Administrador de Usuarios</h2>
-        </div>
-        <div className="rounded-2xl shadow-sm border border-emerald-200 bg-white p-5">
-          <p className="text-sm text-gray-600">
-            El módulo de <strong>Administrador de Usuarios</strong> aún no está enlazado. Aquí se conectará el
-            programa cuando esté listo.
-          </p>
-        </div>
-      </div>
-    </RoleGate>
-  );
-}
+  // Si hay sesión pero no hay hash, redirige automáticamente al portal
+  if (!route || route === "") {
+    window.location.hash = "#portal_admin";
+    return null;
+  }
 
+  return null;
+}
