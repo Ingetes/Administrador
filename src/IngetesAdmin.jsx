@@ -47,17 +47,20 @@ useEffect(() => {
       sessionStorage.removeItem("ingetes_admin_session");
   }, [session]);
 
-  const value = useMemo(
-    () => ({
-      session,
-      login: async (email, password) => {
-        const user = await mockAuth.login(email, password);
-        setSession(user);
-      },
-      logout: () => setSession(null),
-    }),
-    [session]
-  );
+const value = useMemo(
+  () => ({
+    session,
+    login: async (email, password) => {
+      const user = await mockAuth.login(email, password);
+      // 1) Ir al portal
+      window.location.hash = "#portal_admin";
+      // 2) Guardar sesión (ya con route correcto)
+      setSession(user);
+    },
+    logout: () => setSession(null),
+  }),
+  [session]
+);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
@@ -93,7 +96,6 @@ function LoginCard() {
     setLoading(true);
     try {
       await login(email.trim(), password);
-      window.location.hash = "#portal_admin";
     } catch (err) {
       setError(err?.message || "No se pudo iniciar sesión");
     } finally {
@@ -238,9 +240,9 @@ function AuthBody({ route }) {
       <Portaladmin
         onBack={() => {
           // volver debe CERRAR sesión y regresar a /Administrador/
-          logout();
-          sessionStorage.removeItem("ingetes_admin_session");
-          window.location.hash = "";
+window.location.hash = "";
+logout();
+sessionStorage.removeItem("ingetes_admin_session");
         }}
       />
     );
