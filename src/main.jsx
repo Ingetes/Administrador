@@ -1,10 +1,10 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import AdminAccessPortal from "./IngetesAdmin.jsx"; // 👈 este es tu componente exportado por defecto
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import IngetesAdmin from './IngetesAdmin.jsx'   // <— Import default, sin llaves
+import './index.css'
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AdminAccessPortal />
+    <IngetesAdmin />
   </React.StrictMode>
-);
+)
