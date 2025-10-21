@@ -232,22 +232,25 @@ export default function IngetesAdmin() {
 
 /** ========== Helper: decide qué mostrar con base en sesión/hash ========== */
 function AuthBody({ route }) {
-  const { session } = useAuth();
+  const { session, logout } = useAuth();
 
-  // Si no hay sesión, muestra login
+  // Si no hay sesión → Login
   if (!session) return <LoginCard />;
 
-  // Si hay sesión y estamos en el hash correcto, muestra el portal
+  // Si el hash es el correcto → Portal
   if (route === "#portal_admin") {
-    return <Portaladmin />; // 👉 pantalla completa
+    return (
+      <Portaladmin
+        onBack={() => {
+          // cerrar sesión y volver a la raíz del repo
+          logout();
+          window.location.hash = "";
+        }}
+      />
+    );
   }
 
-// Si hay sesión pero no hay hash, salir al login (borrar sesión)
-if (!route || route === "") {
-  sessionStorage.removeItem("ingetes_admin_session"); // borra sesión
-  window.location.reload(); // recarga mostrando pantalla principal
-  return null;
+  // Con sesión pero sin el hash correcto → volver a mostrar el login
+  return <LoginCard />;
 }
 
-  return null;
-}
