@@ -234,8 +234,7 @@ function InnerApp({ route }) {
 <div className="hidden md:flex flex-col justify-center items-start rounded-2xl bg-[linear-gradient(135deg,#059669,rgba(5,150,105,0.9))] text-white p-10 shadow-xl relative overflow-hidden">
   {/* Logo y título */}
   <div className="relative z-10 space-y-4">
-    <img src={logoIngetes} alt="Logo INGETES" className="h-12 mb-4 opacity-95" />
-    <h2 className="text-3xl font-bold leading-tight">Portal de Clientes INGETES</h2>
+    <h2 className="text-3xl font-bold leading-tight">Administrador INGETES</h2>
     <p className="text-emerald-100 text-base max-w-sm">
       Administra usuarios y permisos del ecosistema de clientes de INGETES de forma segura y centralizada.
     </p>
