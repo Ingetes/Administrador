@@ -3,49 +3,6 @@ import Portaladmin from "./Portaladmin.jsx";
 
 const logoIngetes = "https://ingetes.github.io/Portal-de-clientes/ingetes.jpg";
 
-// src/IngetesAdmin.jsx
-import { useState } from "react";
-
-export default function IngetesAdmin() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-
-    // valida si quieres (puedes dejarlo en true para demo)
-    const ok = true;
-    if (!ok) {
-      setError("Credenciales inválidas");
-      return;
-    }
-
-    // >>> redirige a la vista de administrador, a pantalla completa
-    window.location.hash = "#portal_admin";
-  };
-
-  return (
-    <form onSubmit={onSubmit}>
-      {/* ... tu UI actual de login ... */}
-      {error && <div className="text-red-600">{error}</div>}
-
-      <input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="usuario@ingetes.com"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="••••••••"
-      />
-
-      <button type="submit">Ingresar</button>
-    </form>
-  );
-}
 /** ========== Mock de usuarios (SOLO DEMO) ========== */
 const USERS = [
   { email: "jgarzon@ingetes.com", password: "Ing830#1", role: "SUPER_ADMIN", name: "Juan Sebastián Garzón" },
@@ -239,6 +196,76 @@ function RoleGate({ children }) {
   return <>{children}</>;
 }
 
+// ⬇️ Componente principal ÚNICO con export default
+export default function IngetesAdmin() {
+  // Escucha el hash para saber si mostrar Portaladmin o la pantalla de login
+  const [route, setRoute] = useState(window.location.hash);
+
+  useEffect(() => {
+    const onHash = () => setRoute(window.location.hash);
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  return (
+    <AuthProvider>
+      {route === "#portal_admin" ? (
+        // ✅ ya dentro del admin → pantalla completa
+        <div className="min-h-screen w-full">
+          <AuthBody route={route} />
+        </div>
+      ) : (
+        // ✅ login con el panel verde, como lo quieres
+        <div className="min-h-screen w-full bg-gradient-to-br from-white to-emerald-50 p-6">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Branding (verde) */}
+            <div className="hidden md:flex flex-col justify-between rounded-2xl bg-[linear-gradient(135deg,#059669,rgba(5,150,105,0.85))] text-white p-8 shadow-xl">
+              <div>
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/15 rounded-xl p-2">
+                    <IconShield className="w-7 h-7" />
+                  </div>
+                  <h1 className="text-2xl font-semibold leading-tight">
+                    Portal de Clientes INGETES
+                  </h1>
+                </div>
+                <p className="mt-6 text-white/90 leading-relaxed">
+                  Administra usuarios y permisos del ecosistema de clientes.
+                </p>
+              </div>
+              <div className="text-sm text-white/80">
+                <p>Solo personal autorizado puede ingresar a este módulo.</p>
+              </div>
+            </div>
+
+            {/* Tarjeta de acceso */}
+            <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
+              <AuthBody route={route} />
+            </div>
+          </div>
+        </div>
+      )}
+    </AuthProvider>
+  );
+}
+
+// Mantén este helper: muestra Login si no hay sesión; si hay, entra al Portal
+function AuthBody({ route }) {
+  const { session } = useAuth();
+  if (!session) return <LoginCard />;
+
+  // Al hacer login, tu botón hace: window.location.hash = "#portal_admin"
+  if (route === "#portal_admin") {
+    return <Portaladmin />; // 👉 pantalla completa
+  }
+
+  // Si hay sesión pero no estás en #portal_admin, deja tu dashboard de siempre
+  return (
+    <RoleGate>
+      <AdminDashboard />
+    </RoleGate>
+  );
+}
 /** ========== Dashboard (placeholder) ========== */
 function AdminDashboard() {
   const { session, logout } = useAuth();
