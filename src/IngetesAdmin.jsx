@@ -231,9 +231,21 @@ function InnerApp({ route }) {
         // En cualquier otro caso: tu layout original con el panel verde
         <div className="min-h-screen w-full bg-gradient-to-br from-white to-emerald-50 p-6">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="hidden md:flex flex-col justify-between rounded-2xl bg-[linear-gradient(135deg,#059669,rgba(5,150,105,0.85))] text-white p-8 shadow-xl">
-              {/* panel verde de tu portada */}
-            </div>
+<div className="hidden md:flex flex-col justify-center items-start rounded-2xl bg-[linear-gradient(135deg,#059669,rgba(5,150,105,0.9))] text-white p-10 shadow-xl relative overflow-hidden">
+  {/* Logo y título */}
+  <div className="relative z-10 space-y-4">
+    <img src={logoIngetes} alt="Logo INGETES" className="h-12 mb-4 opacity-95" />
+    <h2 className="text-3xl font-bold leading-tight">Portal de Clientes INGETES</h2>
+    <p className="text-emerald-100 text-base max-w-sm">
+      Administra usuarios y permisos del ecosistema de clientes de INGETES de forma segura y centralizada.
+    </p>
+  </div>
+
+  {/* Fondo decorativo */}
+  <div className="absolute inset-0 bg-gradient-to-br from-emerald-700/20 to-emerald-500/10 rounded-2xl"></div>
+  <div className="absolute -bottom-12 -right-12 w-56 h-56 bg-white/10 rounded-full blur-3xl"></div>
+  <div className="absolute -top-12 -left-16 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+</div>
             <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
               <AuthBody route={route} />
             </div>
