@@ -69,16 +69,6 @@ const IconAlert = (props) => (
     <path d="M1 21h22L12 2 1 21zm12-3h-2v2h2v-2zm0-8h-2v6h2V10z" />
   </svg>
 );
-const IconLogout = (props) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={props.className || "w-4 h-4"}>
-    <path d="M16 13v-2H7V8l-5 4 5 4v-3h9zM20 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
-  </svg>
-);
-const IconLogin = (props) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={props.className || "w-4 h-4"}>
-    <path d="M10 17v-3H3v-4h7V7l5 5-5 5zM21 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
-  </svg>
-);
 
 /** ========== Login Card ========== */
 function LoginCard() {
@@ -155,17 +145,16 @@ function LoginCard() {
             />
           </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full rounded-xl text-white text-lg font-semibold py-3 ${
-                loading
-                  ? "bg-emerald-400 cursor-not-allowed"
-                  : "bg-emerald-600 hover:bg-emerald-700"
-              }`}
-            >
-              {loading ? "Ingresando..." : "Ingresar"}
-            </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full rounded-xl text-white text-lg font-semibold py-3 ${
+              loading ? "bg-emerald-400 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-700"
+            }`}
+          >
+            {loading ? "Ingresando..." : "Ingresar"}
+          </button>
+
           <p className="text-xs text-center text-gray-500">
             Acceso restringido al <strong>SUPER_ADMIN</strong>.
           </p>
@@ -183,24 +172,18 @@ function RoleGate({ children }) {
   if (!allowed) {
     return (
       <div className="max-w-xl mx-auto mt-8 p-4 border border-emerald-300 bg-emerald-50 rounded-xl">
-        <div className="flex items-center gap-2 mb-2">
-          <IconAlert className="w-5 h-5 text-emerald-600" />
-          <h2 className="font-semibold text-emerald-700">Acceso denegado</h2>
-        </div>
-        <p className="text-sm text-emerald-700">
-          Tu rol actual no tiene permisos para ingresar al Administrador de Usuarios.
-        </p>
+        <h2 className="font-semibold text-emerald-700 mb-1">Acceso denegado</h2>
+        <p className="text-sm text-emerald-700">Tu rol actual no tiene permisos para ingresar al Administrador de Usuarios.</p>
       </div>
     );
   }
   return <>{children}</>;
 }
 
-// ⬇️ Componente principal ÚNICO con export default
+/** ========== Componente principal ÚNICO (default) ========== */
 export default function IngetesAdmin() {
   // Escucha el hash para saber si mostrar Portaladmin o la pantalla de login
   const [route, setRoute] = useState(window.location.hash);
-
   useEffect(() => {
     const onHash = () => setRoute(window.location.hash);
     window.addEventListener("hashchange", onHash);
@@ -215,7 +198,7 @@ export default function IngetesAdmin() {
           <AuthBody route={route} />
         </div>
       ) : (
-        // ✅ login con el panel verde, como lo quieres
+        // ✅ login con el panel verde (como lo dejaste)
         <div className="min-h-screen w-full bg-gradient-to-br from-white to-emerald-50 p-6">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Branding (verde) */}
@@ -225,9 +208,7 @@ export default function IngetesAdmin() {
                   <div className="bg-white/15 rounded-xl p-2">
                     <IconShield className="w-7 h-7" />
                   </div>
-                  <h1 className="text-2xl font-semibold leading-tight">
-                    Portal de Clientes INGETES
-                  </h1>
+                  <h1 className="text-2xl font-semibold leading-tight">Portal de Clientes INGETES</h1>
                 </div>
                 <p className="mt-6 text-white/90 leading-relaxed">
                   Administra usuarios y permisos del ecosistema de clientes.
@@ -249,116 +230,32 @@ export default function IngetesAdmin() {
   );
 }
 
-// Mantén este helper: muestra Login si no hay sesión; si hay, entra al Portal
+/** ========== Helper: decide qué mostrar con base en sesión/hash ========== */
 function AuthBody({ route }) {
   const { session } = useAuth();
   if (!session) return <LoginCard />;
 
-  // Al hacer login, tu botón hace: window.location.hash = "#portal_admin"
+  // Al hacer login, el botón pone: window.location.hash = "#portal_admin"
   if (route === "#portal_admin") {
     return <Portaladmin />; // 👉 pantalla completa
   }
 
-  // Si hay sesión pero no estás en #portal_admin, deja tu dashboard de siempre
+  // Si hay sesión pero no estás en #portal_admin, deja un dashboard placeholder
   return (
     <RoleGate>
-      <AdminDashboard />
-    </RoleGate>
-  );
-}
-/** ========== Dashboard (placeholder) ========== */
-function AdminDashboard() {
-  const { session, logout } = useAuth();
-  return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center gap-3 mb-5">
           <IconUser className="w-6 h-6 text-emerald-600" />
-          <div>
-            <h2 className="text-xl font-semibold text-emerald-700">Administrador de Usuarios</h2>
-            <p className="text-sm text-gray-600">
-              Bienvenido, {session?.name} — Rol: <strong>{session?.role}</strong>
-            </p>
-          </div>
+          <h2 className="text-xl font-semibold text-emerald-700">Administrador de Usuarios</h2>
         </div>
-        <button
-          onClick={logout}
-          className="inline-flex items-center gap-2 rounded-xl border border-emerald-600 text-emerald-700 hover:bg-emerald-50 px-4 py-2 font-semibold"
-        >
-          <IconLogout /> Salir
-        </button>
-      </div>
-
-      <div className="rounded-2xl shadow-sm border border-emerald-200 bg-white p-5">
-        <h3 className="font-medium mb-1 text-emerald-700">Acceso concedido</h3>
-        <p className="text-sm text-gray-600">
-          El módulo de <strong>Administrador de Usuarios</strong> aún no está enlazado. Aquí se conectará el
-          programa cuando esté listo.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/** ========== Componente principal exportado ========== */
-export default function AdminAccessPortal() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
-
-return (
-  <AuthProvider>
-    {window.location.hash === "#portal_admin" ? (
-      // Cuando ya está dentro del panel, mostramos el Portaladmin a pantalla completa
-      <div className="min-h-screen w-full">
-        <AuthBody />
-      </div>
-    ) : (
-      // Vista de login con el panel verde (solo antes de ingresar)
-      <div className="min-h-screen w-full bg-gradient-to-br from-white to-emerald-50 p-6">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Branding */}
-          <div className="hidden md:flex flex-col justify-between rounded-2xl bg-[linear-gradient(135deg,#059669,rgba(5,150,105,0.85))] text-white p-8 shadow-xl">
-            <div>
-              <div className="flex items-center gap-3">
-                <div className="bg-white/15 rounded-xl p-2">
-                  <IconShield className="w-7 h-7" />
-                </div>
-                <h1 className="text-2xl font-semibold leading-tight">Portal de Clientes INGETES</h1>
-              </div>
-              <p className="mt-6 text-white/90 leading-relaxed">
-                Administra usuarios y permisos del ecosistema de clientes.
-              </p>
-            </div>
-            <div className="text-sm text-white/80">
-              <p>Solo personal autorizado puede ingresar a este módulo.</p>
-            </div>
-          </div>
-
-          {/* Panel */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
-            <AuthBody />
-          </div>
+        <div className="rounded-2xl shadow-sm border border-emerald-200 bg-white p-5">
+          <p className="text-sm text-gray-600">
+            El módulo de <strong>Administrador de Usuarios</strong> aún no está enlazado. Aquí se conectará el
+            programa cuando esté listo.
+          </p>
         </div>
       </div>
-    )}
-  </AuthProvider>
-);
-}
-
-function AuthBody() {
-  const { session } = useAuth();
-  if (!session) return <LoginCard />;
-
-  // Si ya hay sesión activa, mostramos el otro componente
-  if (window.location.hash === "#portal_admin") {
-    return <Portaladmin />;
-  }
-
-  // Por defecto sigue mostrando el dashboard original
-  return (
-    <RoleGate>
-      <AdminDashboard />
     </RoleGate>
   );
 }
+
