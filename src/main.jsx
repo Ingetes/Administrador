@@ -1,18 +1,14 @@
+// src/main.jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
-import IngetesAdmin from "./IngetesAdmin.jsx";
-import Portaladmin from "./Portaladmin.jsx";
 
-const root = ReactDOM.createRoot(document.getElementById("root")); // ← solo una vez
+// 👇 IMPORTA SIEMPRE EL CSS (si falta, se rompe el estilo)
+import "./index.css";
 
-function renderRoute() {
-  const hash = window.location.hash.replace("#", "");
-  if (hash === "/portal_admin") {
-    root.render(<Portaladmin />);           // ← re-renderiza, desmonta la vista previa
-  } else {
-    root.render(<IngetesAdmin />);
-  }
-}
+import AdminAccessPortal from "./IngetesAdmin.jsx";
 
-window.addEventListener("hashchange", renderRoute);
-renderRoute(); // primera carga
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <AdminAccessPortal />
+  </React.StrictMode>
+);
