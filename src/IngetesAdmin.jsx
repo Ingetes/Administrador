@@ -3,6 +3,49 @@ import Portaladmin from "./Portaladmin.jsx";
 
 const logoIngetes = "https://ingetes.github.io/Portal-de-clientes/ingetes.jpg";
 
+// src/IngetesAdmin.jsx
+import { useState } from "react";
+
+export default function IngetesAdmin() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    // valida si quieres (puedes dejarlo en true para demo)
+    const ok = true;
+    if (!ok) {
+      setError("Credenciales inválidas");
+      return;
+    }
+
+    // >>> redirige a la vista de administrador, a pantalla completa
+    window.location.hash = "#portal_admin";
+  };
+
+  return (
+    <form onSubmit={onSubmit}>
+      {/* ... tu UI actual de login ... */}
+      {error && <div className="text-red-600">{error}</div>}
+
+      <input
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="usuario@ingetes.com"
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="••••••••"
+      />
+
+      <button type="submit">Ingresar</button>
+    </form>
+  );
+}
 /** ========== Mock de usuarios (SOLO DEMO) ========== */
 const USERS = [
   { email: "jgarzon@ingetes.com", password: "Ing830#1", role: "SUPER_ADMIN", name: "Juan Sebastián Garzón" },
