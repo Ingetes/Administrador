@@ -242,11 +242,12 @@ function AuthBody({ route }) {
     return <Portaladmin />; // 👉 pantalla completa
   }
 
-  // Si hay sesión pero no hay hash, redirige automáticamente al portal
-  if (!route || route === "") {
-    window.location.hash = "#portal_admin";
-    return null;
-  }
+// Si hay sesión pero no hay hash, salir al login (borrar sesión)
+if (!route || route === "") {
+  sessionStorage.removeItem("ingetes_admin_session"); // borra sesión
+  window.location.reload(); // recarga mostrando pantalla principal
+  return null;
+}
 
   return null;
 }
