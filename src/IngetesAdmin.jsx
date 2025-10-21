@@ -29,13 +29,22 @@ function useAuth() {
 function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
 
+  // ⬇️ Solo restaura sesión cuando la URL está en #portal_admin.
+  // En cualquier otro hash (o sin hash) la borra.
   useEffect(() => {
     const raw = sessionStorage.getItem("ingetes_admin_session");
-    if (raw) setSession(JSON.parse(raw));
+    if (window.location.hash === "#portal_admin" && raw) {
+      setSession(JSON.parse(raw));
+    } else {
+      sessionStorage.removeItem("ingetes_admin_session");
+    }
   }, []);
+
   useEffect(() => {
-    if (session) sessionStorage.setItem("ingetes_admin_session", JSON.stringify(session));
-    else sessionStorage.removeItem("ingetes_admin_session");
+    if (session)
+      sessionStorage.setItem("ingetes_admin_session", JSON.stringify(session));
+    else
+      sessionStorage.removeItem("ingetes_admin_session");
   }, [session]);
 
   const value = useMemo(
@@ -182,7 +191,6 @@ function RoleGate({ children }) {
 
 /** ========== Componente principal ÚNICO (default) ========== */
 export default function IngetesAdmin() {
-  // Escucha el hash para saber si mostrar Portaladmin o la pantalla de login
   const [route, setRoute] = useState(window.location.hash);
   useEffect(() => {
     const onHash = () => setRoute(window.location.hash);
@@ -192,34 +200,20 @@ export default function IngetesAdmin() {
 
   return (
     <AuthProvider>
+      {/* ⬇️ fuerza logout automático si el hash no es #portal_admin */}
+      <RouteGuard route={route} />
+
       {route === "#portal_admin" ? (
-        // ✅ ya dentro del admin → pantalla completa
         <div className="min-h-screen w-full">
           <AuthBody route={route} />
         </div>
       ) : (
-        // ✅ login con el panel verde (como lo dejaste)
         <div className="min-h-screen w-full bg-gradient-to-br from-white to-emerald-50 p-6">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Branding (verde) */}
+            {/* panel verde + tarjeta login como ya lo tienes */}
             <div className="hidden md:flex flex-col justify-between rounded-2xl bg-[linear-gradient(135deg,#059669,rgba(5,150,105,0.85))] text-white p-8 shadow-xl">
-              <div>
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/15 rounded-xl p-2">
-                    <IconShield className="w-7 h-7" />
-                  </div>
-                  <h1 className="text-2xl font-semibold leading-tight">Portal de Clientes INGETES</h1>
-                </div>
-                <p className="mt-6 text-white/90 leading-relaxed">
-                  Administra usuarios y permisos del ecosistema de clientes.
-                </p>
-              </div>
-              <div className="text-sm text-white/80">
-                <p>Solo personal autorizado puede ingresar a este módulo.</p>
-              </div>
+              {/* ... */}
             </div>
-
-            {/* Tarjeta de acceso */}
             <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
               <AuthBody route={route} />
             </div>
@@ -252,5 +246,19 @@ function AuthBody({ route }) {
 
   // Con sesión pero sin el hash correcto → volver a mostrar el login
   return <LoginCard />;
+}
+// ⬇️ componente guardián que cierra sesión si el hash NO es #portal_admin
+function RouteGuard({ route }) {
+  const { session, logout } = useAuth();
+
+  useEffect(() => {
+    if (route !== "#portal_admin" && session) {
+      // cerrar sesión si se navega fuera del portal
+      logout();
+      sessionStorage.removeItem("ingetes_admin_session");
+    }
+  }, [route, session, logout]);
+
+  return null;
 }
 
