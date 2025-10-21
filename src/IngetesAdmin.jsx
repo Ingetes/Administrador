@@ -192,30 +192,47 @@ function RoleGate({ children }) {
 }
 
 /** ========== Componente principal ÚNICO (default) ========== */
-export default function IngetesAdmin() {
-  const [route, setRoute] = useState(window.location.hash);
+// --- Sustituye tu export default por esto ---
 
-  useEffect(() => {
+export default function IngetesAdmin() {
+  const [route, setRoute] = React.useState(window.location.hash);
+
+  React.useEffect(() => {
     const onHash = () => setRoute(window.location.hash);
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
+  // Mantén el provider aquí y mueve el consumo de sesión a un componente interno
   return (
     <AuthProvider>
-      {/* cierra sesión automáticamente si el hash no es #portal_admin */}
+      <InnerApp route={route} />
+    </AuthProvider>
+  );
+}
+
+function InnerApp({ route }) {
+  const { session } = useAuth();
+
+  // 👇 clave: solo mostramos el portal si HAY sesión y estamos en #portal_admin
+  const isPortal = Boolean(session) && route === "#portal_admin";
+
+  return (
+    <>
+      {/* Cierra sesión si alguien navega fuera de #portal_admin */}
       <RouteGuard route={route} />
 
-      {route === "#portal_admin" ? (
+      {isPortal ? (
+        // Layout simple únicamente cuando sí estamos dentro del portal
         <div className="min-h-screen w-full">
           <AuthBody route={route} />
         </div>
       ) : (
-        // ← Mantiene exactamente tu layout (panel verde + tarjeta)
+        // En cualquier otro caso: tu layout original con el panel verde
         <div className="min-h-screen w-full bg-gradient-to-br from-white to-emerald-50 p-6">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="hidden md:flex flex-col justify-between rounded-2xl bg-[linear-gradient(135deg,#059669,rgba(5,150,105,0.85))] text-white p-8 shadow-xl">
-              {/* Tu contenido/hero verde a la izquierda */}
+              {/* panel verde de tu portada */}
             </div>
             <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100">
               <AuthBody route={route} />
@@ -223,7 +240,7 @@ export default function IngetesAdmin() {
           </div>
         </div>
       )}
-    </AuthProvider>
+    </>
   );
 }
 
